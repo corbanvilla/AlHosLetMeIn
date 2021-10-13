@@ -1,0 +1,14 @@
+WinMetadata\Windows.winmd
+App.xbf
+BasicFaceTracking.xr.xml
+MainPage.xbf
+Scenario1_TrackInWebcam.xbf
+Styles\Styles.xbf
+Properties\Default.rd.xml
+Assets\microsoft-sdk.png
+Assets\smallTile-sdk.png
+Assets\splash-sdk.png
+Assets\squareTile-sdk.png
+Assets\storeLogo-sdk.png
+Assets\tile-sdk.png
+Assets\windows-sdk.png
