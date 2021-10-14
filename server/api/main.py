@@ -26,7 +26,7 @@ def find_faces(face: ImageUpload):
         decoded_image_stream = BytesIO(b64decode(face.image))
 
         # Attempt to open and convert to RGB
-        image = face_recognition.load_image_file(decoded_image_stream).convert('RGB')  # TODO - swap with jpeg lib
+        image = face_recognition.load_image_file(decoded_image_stream)  # TODO - swap with jpeg lib
         faces = face_recognition.face_locations(image, number_of_times_to_upsample=0, model="cnn")
         elapsed = time.time()-start
         print(f"Found faces: {len(faces)} in {elapsed} time.")

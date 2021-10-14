@@ -4,7 +4,7 @@ from PIL import Image
 from io import BytesIO
 from base64 import b64encode
 
-endpoint = "http://localhost:8000/faces"
+endpoint = "http://10.7.0.3:80/faces"
 
 
 def test_upload_image():
@@ -16,9 +16,9 @@ def test_upload_image():
 
     # print(image_bytes.read())
 
-    images = [b64encode(image_bytes.read()).decode('utf-8')]
+    images = b64encode(image_bytes.read()).decode('utf-8')
 
-    body = {"images": images}
+    body = {"image": images}
 
     r = requests.request("POST", url=endpoint, json=body)
     print(f"Response: {r.text}")

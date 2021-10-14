@@ -4,7 +4,7 @@ from PIL import Image
 from io import BytesIO
 from base64 import b64encode
 
-endpoint = "http://10.7.0.3:18080/extract"
+endpoint = "http://10.7.0.3:80/extract"
 
 
 def test_upload_image():
