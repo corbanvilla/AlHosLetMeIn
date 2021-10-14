@@ -9,7 +9,7 @@
 //
 //*********************************************************
 
-using System;
+using Windows.System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,6 +33,7 @@ using Windows.UI.Xaml.Shapes;
 using Windows.Storage.Streams;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
+using System;
 
 namespace SDKTemplate
 {
@@ -319,7 +320,7 @@ namespace SDKTemplate
                     /// System.Diagnostics.Debug.WriteLine(request_json);
 
                     var response = await client.PostAsync(
-                        "http://10.7.0.2:8000/faces",
+                        "http://localhost:80/faces",
                         new StringContent(request_json, Encoding.UTF8, "application/json")
                     );
                     ///response.EnsureSuccessStatusCode();

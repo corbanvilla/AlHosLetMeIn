@@ -1,1 +1,1 @@
-C:\Users\animcogn\Downloads\BasicFaceTracking\cs\BasicFaceTracking.csproj;x64
+C:\Users\animcogn\github\AlHosLetMeIn\BasicFaceTracking\cs\BasicFaceTracking.csproj;x64
