@@ -61,7 +61,7 @@ def find_faces(face: ImageUpload) -> List[FaceBox]:
             alhosn = crud.get_alhosn_status(db, closest_match)
             top, right, bottom, left = face_location
             face_box = FaceBox(
-                height=top-bottom,
+                height=bottom-top,  # this is intentional
                 width=right-left,
                 x=left,
                 y=top,
