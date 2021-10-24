@@ -7,7 +7,14 @@ from face_api.database.models import User
 
 def get_all_users(db: Session) -> dict:
     users = db.query(User).all()
-    users_dict = {f"{user.first_name} {user.last_name}": pickle.loads(user.face_encoding) for user in users}
+
+    users_dict = {}
+    for user in users:
+        try:
+            users_dict[f"{user.first_name} {user.last_name}"] = pickle.loads(user.face_encoding)
+        except pickle.UnpicklingError:
+            continue
+    # users_dict = {f"{user.first_name} {user.last_name}": pickle.loads(user.face_encoding) for user in users}
     return users_dict
 
 
