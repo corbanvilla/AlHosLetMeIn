@@ -1,6 +1,9 @@
 import time
 import pickle
 
+
+from loguru import logger as log
+
 from io import BytesIO
 from base64 import b64decode
 
@@ -19,7 +22,7 @@ db = SessionLocal()
 app = FastAPI()
 
 profiles = crud.get_all_users(db)
-print(f'Loaded {len(profiles)} profiles from database!')
+log.infog(f'Loaded {len(profiles)} profiles from database!')
 
 
 class ImageUpload(BaseModel):

@@ -1,6 +1,6 @@
 FROM animcogn/face_recognition:gpu-nightly
 
-RUN pip3 install fastapi uvicorn numpy sqlalchemy pillow
+RUN pip3 install fastapi uvicorn numpy sqlalchemy pillow loguru
 
 WORKDIR /app
 COPY face_api/ ./face_api
