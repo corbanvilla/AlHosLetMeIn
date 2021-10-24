@@ -77,7 +77,7 @@ def find_faces(face: ImageUpload) -> List[FaceBox]:
         print(f'Unable to decode image: {e}')
         raise HTTPException(status_code=500, detail="Unable to process image!")
 
-    return 200
+    return faces
 
 
 @app.post("/save_face_encoding")
