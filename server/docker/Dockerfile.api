@@ -3,5 +3,5 @@ FROM animcogn/face_recognition:gpu-nightly
 RUN pip3 install fastapi uvicorn numpy
 
 WORKDIR /app
-COPY api ./api
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
+COPY face_api .
+CMD ["uvicorn", "face_api.main:app", "--host", "0.0.0.0", "--port", "80"]
