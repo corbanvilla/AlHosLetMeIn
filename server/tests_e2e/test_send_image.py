@@ -27,10 +27,13 @@ def test_upload_image():
 
 def test_save_face_encoding():
 
-    endpoint = "http://10.7.0.3:80/save_face_encoding?user_id=1"
+    # image_name, user_id = ("corban villa.jpg", 1)
+    image_name, user_id = ("IMG_3420.jpg", 2)  # aren
+
+    endpoint = f"http://10.7.0.3:80/save_face_encoding?user_id={user_id}"
 
     image_bytes = BytesIO()
-    Image.open('/Users/animcogn/Downloads/corban villa.jpg').save(image_bytes, format='jpeg')
+    Image.open(f'/Users/animcogn/Downloads/{image_name}').save(image_bytes, format='jpeg')
     image_bytes.seek(0)  # reset cursor
 
     # print(image_bytes.read())

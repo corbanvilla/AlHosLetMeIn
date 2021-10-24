@@ -6,6 +6,7 @@ from loguru import logger as log
 
 from io import BytesIO
 from base64 import b64decode
+from typing import List
 
 import face_recognition
 
@@ -29,8 +30,16 @@ class ImageUpload(BaseModel):
     image: str
 
 
+class FaceBox(BaseModel):
+    height: int
+    width: int
+    x: int
+    y: int
+    alhosn: str
+
+
 @app.post("/faces")
-def find_faces(face: ImageUpload):
+def find_faces(face: ImageUpload) -> List[FaceBox]:
 
     try:
         start = time.time()
@@ -44,9 +53,22 @@ def find_faces(face: ImageUpload):
         face_encodings = face_recognition.face_encodings(image, face_locations)
 
         # Run recognition
-        for face in face_encodings:
+        faces = []
+        for face_location, face_encoding in zip(face_locations, face_encodings):
             closest_match, match_score = find_closest_match(profiles, face)
             print(f"Match found: {closest_match} ({match_score})")
+
+            alhosn = crud.get_alhosn_status(db, closest_match)
+            top, right, bottom, left = face_locations
+            face_box = FaceBox(
+                height=top-bottom,
+                width=right-left,
+                x=left,
+                y=top,
+                alhosn=alhosn,
+            )
+            faces.append(face_box)
+            log.debug(f'Returning face box for user id: {closest_match} with alhosn: {face_box}')
 
         elapsed = time.time()-start
         print(f"Found faces: {len(face_locations)} in {elapsed} time.")
