@@ -55,11 +55,11 @@ def find_faces(face: ImageUpload) -> List[FaceBox]:
         # Run recognition
         faces = []
         for face_location, face_encoding in zip(face_locations, face_encodings):
-            closest_match, match_score = find_closest_match(profiles, face)
+            closest_match, match_score = find_closest_match(profiles, face_encoding)
             print(f"Match found: {closest_match} ({match_score})")
 
             alhosn = crud.get_alhosn_status(db, closest_match)
-            top, right, bottom, left = face_locations
+            top, right, bottom, left = face_location
             face_box = FaceBox(
                 height=top-bottom,
                 width=right-left,
