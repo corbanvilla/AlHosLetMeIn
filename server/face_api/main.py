@@ -19,6 +19,7 @@ db = SessionLocal()
 app = FastAPI()
 
 profiles = crud.get_all_users(db)
+print(f'Loaded {len(profiles)} profiles from database!')
 
 
 class ImageUpload(BaseModel):
