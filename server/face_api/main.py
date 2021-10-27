@@ -11,7 +11,7 @@ from typing import List
 import face_recognition
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from face_api.database.database import SessionLocal, engine
 from face_api.database import models, crud
@@ -31,11 +31,12 @@ class ImageUpload(BaseModel):
 
 
 class FaceBox(BaseModel):
-    height: int
-    width: int
-    x: int
-    y: int
-    alhosn: str
+    """Aliases because C# uses UpperCamelCase"""
+    height: int = Field(alias="Height")
+    width: int = Field(alias="Width")
+    x: int = Field(alias="X")
+    y: int = Field(alias="Y")
+    alhosn: str = Field(alias="Alhosn")
 
 
 @app.post("/faces")
@@ -68,7 +69,7 @@ def find_faces(face: ImageUpload) -> List[FaceBox]:
                 alhosn=alhosn,
             )
             faces.append(face_box)
-            log.debug(f'Returning face box for user id: {closest_match} with alhosn: {face_box}')
+            log.debug(f'Returning face box for user id: {closest_match} with details: {face_box}')
 
         elapsed = time.time()-start
         print(f"Found faces: {len(face_locations)} in {elapsed} time.")
