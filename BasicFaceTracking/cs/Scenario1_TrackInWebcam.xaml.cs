@@ -122,6 +122,17 @@ namespace SDKTemplate
             App.Current.Suspending -= this.OnSuspending;
         }
 
+        /// Corban Class
+        public class AlhosnFaceBox {
+            public int Height { get; set; }
+            public int Width { get; set; }
+            public int X { get; set; }
+            public int Y { get; set; }
+            public string Alhosn { get; set; }
+
+        }
+
+
         /// <summary>
         /// Responds to App Suspend event to stop/release MediaCapture object if it's running and return to Idle state.
         /// </summary>
@@ -291,7 +302,7 @@ namespace SDKTemplate
                     return;
                 }
 
-                IList<DetectedFace> faces;
+                IList<AlhosnFaceBox> faces;
                 try
                 {
                     // Attempt to make an api call
@@ -323,9 +334,14 @@ namespace SDKTemplate
                         "http://localhost:80/faces",
                         new StringContent(request_json, Encoding.UTF8, "application/json")
                     );
+                    string responseContent = await response.Content.ReadAsStringAsync();
                     ///response.EnsureSuccessStatusCode();
+                    ///
 
-                    faces = await this.faceTracker.ProcessNextFrameAsync(previewFrame);
+                    faces = JsonSerializer.Deserialize<IList<AlhosnFaceBox>>(responseContent);
+
+
+                    ///faces = await this.faceTracker.ProcessNextFrameAsync(previewFrame);
                 }
                 catch (Exception ex)
                 {
@@ -347,7 +363,7 @@ namespace SDKTemplate
         /// </summary>
         /// <param name="framePizelSize">Width and height (in pixels) of the video capture frame</param>
         /// <param name="foundFaces">List of detected faces; output from FaceTracker</param>
-        private void SetupVisualization(Windows.Foundation.Size framePixelSize, IList<DetectedFace> foundFaces)
+        private void SetupVisualization(Windows.Foundation.Size framePixelSize, IList<AlhosnFaceBox> foundFaces)
         {
             this.VisualizationCanvas.Children.Clear();
 
@@ -356,16 +372,24 @@ namespace SDKTemplate
                 double widthScale = this.VisualizationCanvas.ActualWidth / framePixelSize.Width;
                 double heightScale = this.VisualizationCanvas.ActualHeight / framePixelSize.Height;
 
-                foreach (DetectedFace face in foundFaces)
+                foreach (AlhosnFaceBox face in foundFaces)
                 {
                     // Create a rectangle element for displaying the face box but since we're using a Canvas
                     // we must scale the rectangles according to the frames's actual size.
+
+                    SolidColorBrush rectangleColor = new SolidColorBrush(Windows.UI.Colors.Red);
+                    if (face.Alhosn == "green")
+                    {
+                        rectangleColor = new SolidColorBrush(Windows.UI.Colors.Green);
+                    }
+
                     Rectangle box = new Rectangle()
                     {
-                        Width = face.FaceBox.Width * widthScale,
-                        Height = face.FaceBox.Height * heightScale,
-                        Margin = new Thickness(face.FaceBox.X * widthScale, face.FaceBox.Y * heightScale, 0, 0),
-                        Style = HighlightedFaceBoxStyle
+                        Width = face.Width * widthScale,
+                        Height = face.Height * heightScale,
+                        Margin = new Thickness(face.X * widthScale, face.Y * heightScale, 0, 0),
+                        Style = HighlightedFaceBoxStyle,
+                        Stroke = rectangleColor
                     };
                     this.VisualizationCanvas.Children.Add(box);
                 }

@@ -30,13 +30,13 @@
     <AppXManifest Include="C:\Users\animcogn\github\AlHosLetMeIn\BasicFaceTracking\cs\bin\x64\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2021-10-14T12:24:24.968</Modified>
+      <Modified>2021-10-27T11:26:06.280</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\animcogn\github\AlHosLetMeIn\BasicFaceTracking\cs\bin\x64\Debug\BasicFaceTracking.exe">
       <PackagePath>entrypoint\BasicFaceTracking.exe</PackagePath>
-      <Modified>2021-10-14T12:24:22.551</Modified>
+      <Modified>2021-10-27T11:26:05.428</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\animcogn\.nuget\packages\microsoft.bcl.asyncinterfaces\5.0.0\lib\netstandard2.0\Microsoft.Bcl.AsyncInterfaces.dll">
       <PackagePath>Microsoft.Bcl.AsyncInterfaces.dll</PackagePath>
@@ -104,19 +104,19 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\animcogn\github\AlHosLetMeIn\BasicFaceTracking\cs\bin\x64\Debug\App.xbf">
       <PackagePath>App.xbf</PackagePath>
-      <Modified>2021-10-14T12:24:22.374</Modified>
+      <Modified>2021-10-27T11:26:05.297</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\animcogn\github\AlHosLetMeIn\BasicFaceTracking\cs\bin\x64\Debug\MainPage.xbf">
       <PackagePath>MainPage.xbf</PackagePath>
-      <Modified>2021-10-14T12:24:22.374</Modified>
+      <Modified>2021-10-27T11:26:05.297</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\animcogn\github\AlHosLetMeIn\BasicFaceTracking\cs\bin\x64\Debug\Scenario1_TrackInWebcam.xbf">
       <PackagePath>Scenario1_TrackInWebcam.xbf</PackagePath>
-      <Modified>2021-10-14T12:24:22.374</Modified>
+      <Modified>2021-10-27T11:26:05.297</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\animcogn\github\AlHosLetMeIn\BasicFaceTracking\cs\bin\x64\Debug\Styles\Styles.xbf">
       <PackagePath>Styles\Styles.xbf</PackagePath>
-      <Modified>2021-10-14T12:24:22.367</Modified>
+      <Modified>2021-10-27T11:26:05.290</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\10.0.19041.0\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
@@ -128,7 +128,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\animcogn\github\AlHosLetMeIn\BasicFaceTracking\cs\bin\x64\Debug\Core\BasicFaceTracking.exe">
       <PackagePath>BasicFaceTracking.exe</PackagePath>
-      <Modified>2021-10-14T12:24:24.956</Modified>
+      <Modified>2021-10-27T11:26:06.272</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>
