@@ -11,7 +11,7 @@ def test_upload_image():
     endpoint = "http://10.7.0.3:80/faces"
 
     image_bytes = BytesIO()
-    # Image.open('./stock_photo.jpg').save(image_bytes, format='jpeg')
+    Image.open('/Users/animcogn/Downloads/corban villa.jpg').save(image_bytes, format='jpeg')
     image_bytes.seek(0)  # reset cursor
 
     # print(image_bytes.read())
