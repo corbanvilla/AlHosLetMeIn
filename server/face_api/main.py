@@ -38,6 +38,9 @@ class FaceBox(BaseModel):
     y: int = Field(alias="Y")
     alhosn: str = Field(alias="Alhosn")
 
+    class Config:
+        allow_population_by_field_name = True
+
 
 @app.post("/faces")
 def find_faces(face: ImageUpload) -> List[FaceBox]:
