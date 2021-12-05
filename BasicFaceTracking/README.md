@@ -1,3 +1,10 @@
+# NOTE
+
+This code is mostly Microsoft's! It comes from this project: https://github.com/microsoft/windows-universal-samples/tree/main/Samples/HolographicFaceTracking. 
+
+I've simply modified their demo to stream frames from the camera sensor to 
+an API server, and render the face boxes accordingly. 
+
 ---
 page_type: sample
 languages:
