@@ -1,4 +1,3 @@
-//#include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include <iostream>
@@ -24,8 +23,6 @@ struct FaceBox {
 };
 
 vector<FaceBox> get_face_locations(py::array_t<uint8_t>& img_in);
-//vector<FaceBox> get_largest_face(Mat img);
-
 
 
 vector<FaceBox> get_face_locations(py::array_t<uint8_t>& img_in) {
@@ -47,7 +44,7 @@ vector<FaceBox> get_face_locations(py::array_t<uint8_t>& img_in) {
     // Make sure we were able to load successfully.
     // If not, return empty vector
     if (facecasc.empty()) {
-//        cerr << "XML file not loaded" << endl;
+        cerr << "XML file not loaded" << endl;
         return face_boxes;
     }
     else {
@@ -55,10 +52,9 @@ vector<FaceBox> get_face_locations(py::array_t<uint8_t>& img_in) {
         struct FaceBox face;
 
         facecasc.detectMultiScale(img, faces, 1.05, 10);
-        cout << "Faces vector size: " << faces.size() << endl;
+//        cout << "Faces vector size: " << faces.size() << endl;
 
         for (int i = 0; i < faces.size(); i++) {
-//            cout << "Found face at: " << faces[i].tl();
             face.top_x = faces[i].tl().x;
             face.top_y = faces[i].tl().y;
             face.bottom_x = faces[i].br().x;
@@ -72,15 +68,6 @@ vector<FaceBox> get_face_locations(py::array_t<uint8_t>& img_in) {
 
 }
 
-//vector<FaceBox> get_largest_face(Mat img) {
-//
-//    // TODO - implement this function
-//    // call get_face_locations
-//    // loop through found faces
-//    // find the largest face
-//    // return it in a vector object of size(1)
-//
-//}
 
 PYBIND11_MODULE(findfaces, m) {
 
