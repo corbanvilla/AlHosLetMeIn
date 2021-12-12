@@ -28,9 +28,9 @@ WORKDIR /usr/src/app
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install -y \
-    python3.9-dev \
-    python3-opencv
-RUN apt-get install gcc
+    python3-opencv \
+    gcc
+
 RUN pip install opencv-python
 
 COPY --from=builder \

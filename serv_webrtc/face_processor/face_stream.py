@@ -15,7 +15,7 @@ class FaceStreamTrack(VideoStreamTrack):
 
     async def recv(self):
 
-        log.debug()
+        log.debug("Recieved frame")
         frame = await self.track.recv()
 
         return frame
