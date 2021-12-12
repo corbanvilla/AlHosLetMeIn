@@ -1,7 +1,7 @@
 import cv2
 import numpy
 
-from aiortc.contrib.media import VideoStreamTrack
+from aiortc import VideoStreamTrack
 
 
 class FaceStreamTrack(VideoStreamTrack):
