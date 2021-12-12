@@ -32,10 +32,4 @@ ENV REMOTE_PEER=DESKTOP-92AG171
 ENV SIGNALING_HOST=10.7.0.3
 ENV SIGNALING_PORT=3000
 
-CMD ["python3", "face_processor/main.py",
-"--verbose",
-"--signaling-host=$LOCAL_PEER",
-"--signaling-port=$SIGNALING_PORT",
-"--local-peer=$LOCAL_PEER",
-"--remote-peer=$REMOTE_PEER"
-]
+CMD ["python3", "face_processor/main.py", "--verbose", "--signaling-host=$LOCAL_PEER", "--signaling-port=$SIGNALING_PORT", "--local-peer=$LOCAL_PEER", "--remote-peer=$REMOTE_PEER" ]
