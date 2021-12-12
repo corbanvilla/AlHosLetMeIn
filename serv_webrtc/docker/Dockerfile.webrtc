@@ -1,7 +1,28 @@
-FROM animcogn/face_recognition:gpu-nightly
+FROM python:3.8 as builder
+# Builder dockerfile
 
 WORKDIR /usr/src/app
 
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y \
+    gcc \
+    libopencv-dev \
+    cmake \
+    python3.8-dev \
+    python3-opencv
+RUN git clone https://github.com/pybind/pybind11.git
+
+COPY opencv/* .
+
+RUN cmake . && \
+    make
+
+FROM animcogn/face_recognition:gpu-nightly as deploy
+
+WORKDIR /usr/src/app
+
+# Install aiortc requirements
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install -y \
@@ -16,13 +37,15 @@ RUN apt-get update && \
     libavcodec-dev \
     libavformat-dev 
 
+# Project requirements
 RUN pip install --upgrade pip && \
     pip install \
     aiohttp \
     websockets \
     opencv-python \
     pillow \
-    loguru
+    loguru \
+    sqlalchemy
 
 # The layer below can be removed
 # once the node-dss pull request is merged
@@ -36,14 +59,20 @@ RUN DEBIAN_FRONTEND=noninteractive \
     pip install git+https://github.com/corbanvilla/aiortc.git@dev/node-dss
 
 
+# Pybind11 requirements
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y \
+    python3-opencv \
+    gcc
+
+# Copy Artifacts
+COPY --from=builder \
+    /usr/src/app/findfaces.cpython-39-x86_64-linux-gnu.so ./face_processor/findfaces.cpython-39-x86_64-linux-gnu.so
+COPY opencv/haarcascade_frontalface_default.xml ./face_processor/
+
+# Copy code
 COPY docker/entrypoint-webrtc.sh .
 COPY . .
-
-ENV LOGURU_LEVEL=DEBUG
-
-ENV LOCAL_PEER=face-api
-ENV REMOTE_PEER=DESKTOP-92AG171
-ENV SIGNALING_HOST=10.7.0.3
-ENV SIGNALING_PORT=3000
 
 CMD ["/bin/bash", "entrypoint-webrtc.sh" ]

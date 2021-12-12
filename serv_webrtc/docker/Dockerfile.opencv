@@ -1,4 +1,4 @@
-FROM python:3.9 as builder
+FROM python:3.8 as builder
 # Builder dockerfile
 
 WORKDIR /usr/src/app
@@ -20,7 +20,7 @@ RUN cmake . && \
 
 
 
-FROM python:3.9 as deploy
+FROM python:3.8 as deploy
 # Deployment dockerfile
 
 WORKDIR /usr/src/app
