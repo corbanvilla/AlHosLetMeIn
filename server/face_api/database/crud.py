@@ -14,7 +14,6 @@ def get_all_users(db: Session) -> dict:
             users_dict[user.id] = pickle.loads(user.face_encoding)
         except pickle.UnpicklingError:
             continue
-    # users_dict = {f"{user.first_name} {user.last_name}": pickle.loads(user.face_encoding) for user in users}
 
     return users_dict
 
