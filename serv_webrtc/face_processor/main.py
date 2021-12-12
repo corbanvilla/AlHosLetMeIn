@@ -14,6 +14,8 @@ from aiortc import (
 from aiortc.contrib.media import MediaRelay
 from aiortc.contrib.signaling import BYE, add_signaling_arguments, create_signaling
 
+from face_processor.face_stream import FaceStreamTrack
+
 
 relay = MediaRelay()
 
