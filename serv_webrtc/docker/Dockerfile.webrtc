@@ -47,24 +47,21 @@ RUN apt-get update && \
     cmake \
     python3.8-dev \
     python3-opencv
-RUN git clone https://github.com/pybind/pybind11.git
 
 COPY ./opencv ./opencv
 
 RUN cd opencv && \
+    git clone https://github.com/pybind/pybind11.git && \
     cmake . && \
     make && \
-    ls && \
-    cd ..
-
-# Copy Artifacts
-COPY ./opencv/findfaces.cpython-38-x86_64-linux-gnu.so ./face_processor/findfaces.cpython-38-x86_64-linux-gnu.so
-COPY ./opencv/haarcascade_frontalface_default.xml ./face_processor/
+    cd .. 
 
 # Copy code
 COPY docker/entrypoint-webrtc.sh .
 COPY . .
 
-CMD ["/bin/bash", "entrypoint-webrtc.sh" ]
+RUN cp ./opencv/findfaces.cpython-38-x86_64-linux-gnu.so ./face_processor/findfaces.cpython-38-x86_64-linux-gnu.so && \
+    cp ./opencv/haarcascade_frontalface_default.xml ./face_processor/
 
+ENTRYPOINT ["python3", "face_processor/main.py" ]
 

@@ -22,10 +22,10 @@ db = SessionLocal()
 # Global frame variable to pass between threads
 current_face = VideoFrame(300, 300)
 latest_frame = False
-frame_lock = false  # mutex-lock. More efficient than doing a deep-copy
+frame_lock = False  # mutex-lock. More efficient than doing a deep-copy
 
 known_faces = crud.get_all_users(db)
-log.info(f'Loaded {len(profiles)} profiles from database!')
+log.info(f'Loaded {len(known_faces)} profiles from database!')
 
 
 class FaceStreamTrack(VideoStreamTrack):

@@ -1,7 +1,7 @@
 # https://docs.opencv.org/4.x/db/df5/tutorial_linux_gcc_cmake.html
 
 # Version
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.16)
 
 # Project Name
 project(findfaces)
