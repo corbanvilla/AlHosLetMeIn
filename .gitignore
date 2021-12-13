@@ -1,4 +1,5 @@
 # Prerequisites
+serv_webrtc/faces.db
 **/.DS_Store/*
 .idea/*
 *.d
