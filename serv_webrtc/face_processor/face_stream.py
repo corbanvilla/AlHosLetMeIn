@@ -21,7 +21,7 @@ db = SessionLocal()
 
 # Global frame variable to pass between threads
 current_face = None  # start w/ an empty frame
-latest_frame = False
+latest_frame = None
 frame_lock = False  # mutex-lock. More efficient than doing a deep-copy
 
 known_faces = crud.get_all_users(db)
@@ -55,14 +55,14 @@ class FaceStreamTrack(VideoStreamTrack):
 
             # Assign it to our global variable            
             global latest_frame
-            latest_frame = frame.to_ndarray()
+            latest_frame = frame.to_ndarray(format="bgr24")
 
             # Reset frame counter
             self.frame_counter = 0
 
         # Return whatever we have queued up
         if current_face is not None:
-            new_frame = VideoFrame.from_ndarray(current_face, format="yuv420p")
+            new_frame = VideoFrame.from_ndarray(current_face, format="bgr24")
         else:
             new_frame = VideoFrame(300, 300, format="yuv420p")
 
@@ -90,7 +90,7 @@ class FaceStreamTrack(VideoStreamTrack):
             global frame_lock
             frame_lock = False
             
-            log.debug('Frame lock: enabled!')
+            log.debug('Frame lock: disabled!')
             
         def get_process_frame():
             """
@@ -102,7 +102,7 @@ class FaceStreamTrack(VideoStreamTrack):
                 # Enable lock
                 frame_lock = True
                 
-                log.debug('Frame lock: disabled!')
+                log.debug('Frame lock: enabled!')
         
             # Return latest frame (can be None)
             return latest_frame
@@ -129,16 +129,20 @@ class FaceStreamTrack(VideoStreamTrack):
 
             # Get face encoding
             # This is just how locations need to be formatted for this function
-            locs = (face.top_y, face.bottom_x, face.bottom_y, face.top_x)
+            locs = face_recognition.face_locations(img, model="cnn") #[(face.top_y, face.bottom_x, face.bottom_y, face.top_x)]
+            log.info(f'Found {len(locs)} faces w/ dlib...')
+            log.debug(f'Attempting to get encodings with coordinates: {locs}')
             encodings = face_recognition.face_encodings(img, locs)
             if len(encodings) == 0:
                 log.error(f'Face found but unable to get encoding!')
                 reset_processed_frame()
                 continue
             # Grab the first/only encoding
+            log.debug("Got face encoding!")
             encoding = encodings[0]
 
             # Get our closest match
+            log.debug("Searching for closest match...")
             match, score = self._find_closest_face_match(known_faces, encoding)
             log.debug(f'Match found: {match} ({score})')
 
