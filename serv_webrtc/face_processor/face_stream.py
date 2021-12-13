@@ -20,7 +20,7 @@ models.Base.metadata.create_all(bind=engine)
 db = SessionLocal()
 
 # Global frame variable to pass between threads
-current_face = VideoFrame(300, 300, format="yuv420p")  # start w/ an empty frame
+current_face = None  # start w/ an empty frame
 latest_frame = False
 frame_lock = False  # mutex-lock. More efficient than doing a deep-copy
 
@@ -36,7 +36,7 @@ class FaceStreamTrack(VideoStreamTrack):
     def __init__(self, track):
         super().__init__()  # don't forget this!
         self.track = track
-        self.last_frame = None  # start with a blank video frame
+        self.last_frame = None
         self.frame_counter = 0
 
         self.update_frames = 120
@@ -44,13 +44,12 @@ class FaceStreamTrack(VideoStreamTrack):
     async def recv(self):
 
         self.frame_counter += 1
+        # Grab the frame
+        frame = await self.track.recv()
 
         # If it's been x frames since our last update
         if self.frame_counter >= self.update_frames \
                 and not frame_lock:
-            
-            # Grab the frame
-            frame = await self.track.recv()
 
             # Assign it to our global variable            
             global latest_frame
@@ -60,7 +59,14 @@ class FaceStreamTrack(VideoStreamTrack):
             self.frame_counter = 0
 
         # Return whatever we have queued up
-        return current_face
+        if current_face is not None:
+            new_frame = VideoFrame.from_ndarray(current_face, format="yuv420p")
+        else:
+            new_frame = VideoFrame(300, 300, format="yuv420p")
+
+        new_frame.pts = frame.pts
+        new_frame.time_base = frame.time_base
+        return new_frame
 
     async def _face_analyzer_thread(self):
         """
@@ -87,9 +93,9 @@ class FaceStreamTrack(VideoStreamTrack):
             Helper function to get frame and enable lock if frame is not none
             """
             global latest_frame
-            if latest_frame is not None:
+            global frame_lock
+            if latest_frame is not None and not frame_lock:
                 # Enable lock
-                global frame_lock
                 frame_lock = True
                 
                 log.debug('Frame lock: disabled!')
@@ -102,7 +108,7 @@ class FaceStreamTrack(VideoStreamTrack):
             img = get_process_frame()
             # If we don't have any frames to analyze, sleep+reset
             if img is None:
-                await asyncio.sleep(.5)
+                await asyncio.sleep(.1)
                 continue
 
             # Find faces
@@ -147,7 +153,7 @@ class FaceStreamTrack(VideoStreamTrack):
 
             # Update our global var
             global current_face
-            current_face = VideoFrame.from_ndarray(img, format="yuv420p")
+            current_face = img
 
             # Reset mutex
             reset_processed_frame()
