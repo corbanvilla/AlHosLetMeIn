@@ -27,10 +27,11 @@ def cosine_similarity(f1: np.ndarray, f2: np.ndarray) -> float:
     return cos_theta
 
 
-def find_closest_face_match(self, profiles: list, f1: np.ndarray):
-    dists = np.array([self._cosine_similarity(profile, f1) for profile in profiles.values()])
-
+def find_closest_face_match(profiles: list, f1: np.ndarray):
+    dists = np.array([cosine_similarity(profile, f1) for profile in profiles.values()])
+    log.debug(f'Calculated dists')
     closest_match = np.argmax(dists)
+    log.debug(f'Found closest match')
     profile_name = list(profiles)[closest_match]
     score = round(100 * dists[closest_match], 2)
 
