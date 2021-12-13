@@ -38,8 +38,10 @@ class FaceStreamTrack(VideoStreamTrack):
         self.track = track
         self.last_frame = None
         self.frame_counter = 0
-
         self.update_frames = 120
+
+        # Start our worker thread        
+        self.worker = asyncio.create_task(self._face_analyzer_thread())
         
     async def recv(self):
 
@@ -72,6 +74,8 @@ class FaceStreamTrack(VideoStreamTrack):
         """
         Separate worker thread to analyze last images seen
         """
+        
+        log.debug("Starting face worker thread")
         
         def reset_processed_frame():
             """
@@ -113,6 +117,7 @@ class FaceStreamTrack(VideoStreamTrack):
 
             # Find faces
             faces = findfaces.get_face_locations(img)
+            log.info(f'Found {len(faces)} faces!')
 
             # TODO - implement find largest face pattern
 
