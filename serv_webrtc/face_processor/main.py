@@ -34,7 +34,7 @@ async def run(pc, signaling, poll_interval):
 
     @pc.on("connectionstatechange")
     async def on_connectionstatechange():
-        log.info("Connection state is %s", pc.connectionState)
+        log.info(f"Connection state is {pc.connectionState}")
         if pc.connectionState == "failed":
             log.error("Cleaning up connection.....")
             await pc.close()

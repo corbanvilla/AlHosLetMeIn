@@ -1,3 +1,5 @@
+import numpy as np
+
 def cosine_similarity(f1: np.ndarray, f2: np.ndarray) -> float:
     """
     Find cos(theta) between two angles.
