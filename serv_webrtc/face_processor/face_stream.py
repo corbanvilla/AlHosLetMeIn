@@ -15,6 +15,7 @@ from loguru import logger as log
 from database.database import SessionLocal, engine
 from database import models, crud
 from recognition import cosine_similarity, find_closest_face_match
+from face_box_helper import coordinates_to_face_box
 
 # Initialize database
 models.Base.metadata.create_all(bind=engine)
@@ -119,6 +120,8 @@ class FaceStreamTrack(VideoStreamTrack):
             # Find faces
             #faces = findfaces.get_face_locations(img)
             #log.info(f'Found {len(faces)} faces!')
+            locs = face_recognition.face_locations(img, model="cnn") #[(face.top_y, face.bottom_x, face.bottom_y, face.top_x)]
+            face = coordinates_to_face_box(locs)
 
             # TODO - implement find largest face pattern
 
@@ -130,7 +133,6 @@ class FaceStreamTrack(VideoStreamTrack):
 
             # Get face encoding
             # This is just how locations need to be formatted for this function
-            locs = face_recognition.face_locations(img, model="cnn") #[(face.top_y, face.bottom_x, face.bottom_y, face.top_x)]
             log.info(f'Found {len(locs)} faces w/ dlib...')
             log.debug(f'Attempting to get encodings with coordinates: {locs}')
             encodings = face_recognition.face_encodings(img, locs)
