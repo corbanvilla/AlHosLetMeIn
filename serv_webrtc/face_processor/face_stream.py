@@ -39,7 +39,7 @@ class FaceStreamTrack(VideoStreamTrack):
         self.track = track
         self.last_frame = None
         self.frame_counter = 0
-        self.update_frames = 120
+        self.update_frames = 15
 
         # Start our worker thread        
         self.worker = asyncio.create_task(self._face_analyzer_thread())
@@ -65,7 +65,7 @@ class FaceStreamTrack(VideoStreamTrack):
         if current_face is not None:
             new_frame = VideoFrame.from_ndarray(current_face, format="bgr24")
         else:
-            new_frame = VideoFrame(300, 300, format="yuv420p")
+            new_frame = VideoFrame(300, 300, format="bgr24")
 
         new_frame.pts = frame.pts
         new_frame.time_base = frame.time_base
@@ -117,16 +117,16 @@ class FaceStreamTrack(VideoStreamTrack):
                 continue
 
             # Find faces
-            faces = findfaces.get_face_locations(img)
-            log.info(f'Found {len(faces)} faces!')
+            #faces = findfaces.get_face_locations(img)
+            #log.info(f'Found {len(faces)} faces!')
 
             # TODO - implement find largest face pattern
 
-            if len(faces) == 0:
-                log.info('No faces found in last frame....')
-                reset_processed_frame()
-                continue
-            face = faces[0]
+            #if len(faces) == 0:
+            #    log.info('No faces found in last frame....')
+            #    reset_processed_frame()
+            #    continue
+            #face = faces[0]
 
             # Get face encoding
             # This is just how locations need to be formatted for this function
@@ -144,11 +144,11 @@ class FaceStreamTrack(VideoStreamTrack):
 
             # Get our closest match
             log.debug("Searching for closest match...")
-            match, score = self._find_closest_face_match(known_faces, encoding)
+            match, score = find_closest_face_match(known_faces, encoding)
             log.debug(f'Match found: {match} ({score})')
 
             # Figure our alhosn status
-            alhosn_status = crud.get_alhosn_status(db, closest_match)
+            alhosn_status = crud.get_alhosn_status(db, match)
             log.debug(f'Profile alhosn: {alhosn_status}')
             color = (0, 0, 255)  # default red
             if alhosn_status == "green":
@@ -189,7 +189,8 @@ class FaceStreamTrack(VideoStreamTrack):
         y2 += buffer_amount
 
         # Slice our array
-        return img[x1:x2, y1:y2]
+        # return img[x1:x2, y1:y2]
+        return img[y1:y2, x1:x2]
 
     @staticmethod
     def _scale_image_to_height(img, desired_height: int) -> np.ndarray:

@@ -61,7 +61,7 @@ COPY docker/entrypoint-webrtc.sh .
 COPY . .
 
 RUN cp ./opencv/findfaces.cpython-38-x86_64-linux-gnu.so ./face_processor/findfaces.cpython-38-x86_64-linux-gnu.so && \
-    cp ./opencv/haarcascade_frontalface_default.xml ./face_processor/
+    cp ./opencv/haarcascade_frontalface_default.xml .
 
 ENTRYPOINT ["python3", "face_processor/main.py" ]
 
