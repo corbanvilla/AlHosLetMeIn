@@ -1,23 +1,3 @@
-FROM python:3.8 as builder
-# Builder dockerfile
-
-WORKDIR /usr/src/app
-
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y \
-    gcc \
-    libopencv-dev \
-    cmake \
-    python3.8-dev \
-    python3-opencv
-RUN git clone https://github.com/pybind/pybind11.git
-
-COPY opencv/* .
-
-RUN cmake . && \
-    make
-
 FROM animcogn/face_recognition:gpu-nightly as deploy
 
 WORKDIR /usr/src/app
@@ -58,21 +38,33 @@ RUN DEBIAN_FRONTEND=noninteractive \
     python3.8-dev && \
     pip install git+https://github.com/corbanvilla/aiortc.git@dev/node-dss
 
-
-# Pybind11 requirements
+# Build Pybind11
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install -y \
-    python3-opencv \
-    gcc
+    gcc \
+    libopencv-dev \
+    cmake \
+    python3.8-dev \
+    python3-opencv
+RUN git clone https://github.com/pybind/pybind11.git
+
+COPY ./opencv ./opencv
+
+RUN cd opencv && \
+    cmake . && \
+    make && \
+    ls && \
+    cd ..
 
 # Copy Artifacts
-COPY --from=builder \
-    /usr/src/app/findfaces.cpython-39-x86_64-linux-gnu.so ./face_processor/findfaces.cpython-39-x86_64-linux-gnu.so
-COPY opencv/haarcascade_frontalface_default.xml ./face_processor/
+COPY ./opencv/findfaces.cpython-38-x86_64-linux-gnu.so ./face_processor/findfaces.cpython-38-x86_64-linux-gnu.so
+COPY ./opencv/haarcascade_frontalface_default.xml ./face_processor/
 
 # Copy code
 COPY docker/entrypoint-webrtc.sh .
 COPY . .
 
 CMD ["/bin/bash", "entrypoint-webrtc.sh" ]
+
+

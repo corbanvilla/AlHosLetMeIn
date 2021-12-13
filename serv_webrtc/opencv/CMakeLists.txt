@@ -10,6 +10,9 @@ project(findfaces)
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
+# Allow pybind to find Python
+set(PYBIND11_FINDPYTHON ON)
+
 # Pybind11
 add_subdirectory(pybind11)
 
