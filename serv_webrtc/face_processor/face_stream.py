@@ -20,7 +20,7 @@ models.Base.metadata.create_all(bind=engine)
 db = SessionLocal()
 
 # Global frame variable to pass between threads
-current_face = VideoFrame(300, 300)
+current_face = VideoFrame(300, 300, format="yuv420p")  # start w/ an empty frame
 latest_frame = False
 frame_lock = False  # mutex-lock. More efficient than doing a deep-copy
 
@@ -55,6 +55,9 @@ class FaceStreamTrack(VideoStreamTrack):
             # Assign it to our global variable            
             global latest_frame
             latest_frame = frame.to_ndarray()
+
+            # Reset frame counter
+            self.frame_counter = 0
 
         # Return whatever we have queued up
         return current_face
@@ -144,7 +147,7 @@ class FaceStreamTrack(VideoStreamTrack):
 
             # Update our global var
             global current_face
-            current_face = VideoFrame.from_ndarray(img)
+            current_face = VideoFrame.from_ndarray(img, format="yuv420p")
 
             # Reset mutex
             reset_processed_frame()
@@ -187,7 +190,8 @@ class FaceStreamTrack(VideoStreamTrack):
         scale_factor = desired_height / height
 
         # Calculate new image dimensions
-        new_dims = int(width * scale_factor), int(height * scale_factor)
+        # new_dims = int(width * scale_factor), int(height * scale_factor)
+        new_dims = 300, 300
 
         # Do the actual resize operation
         img = cv2.resize(img, new_dims, interpolation=cv2.INTER_AREA)
