@@ -14,10 +14,15 @@ public class InitiateConnection : MonoBehaviour
     void Start()
     {
         // Subscribe function to init event
-        NodeDssSignaler.PeerConnection.OnInitialized.AddListener(StartConnectionLoop);
+        // NodeDssSignaler.PeerConnection.OnInitialized.AddListener(Connect);
 
     }
 
+    public void Connect()
+    {
+        Debug.Log("Starting connection!");
+        NodeDssSignaler.PeerConnection.StartConnection();
+    }
     public void StartConnectionLoop()
     {
         // Attempt to initiate our connection

@@ -281,7 +281,7 @@ MonoBehaviour:
   AutoLogErrors: 1
   LocalPeerId: hololens
   RemotePeerId: face-api
-  HttpServerAddress: http://192.168.137.1:3000/
+  HttpServerAddress: http://127.0.0.1:3000/
   PollTimeMs: 500
 --- !u!4 &599126880
 Transform:

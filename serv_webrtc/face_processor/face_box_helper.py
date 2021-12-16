@@ -5,7 +5,7 @@ class FaceBox(object):
     bottom_y: int
 
 
-def coordinates_to_face_box(locs):
+def coordinates_to_face_boxs(locs):
     """
     Converts a list of coordinates from
     face_recognition to a FaceBox object
@@ -14,11 +14,14 @@ def coordinates_to_face_box(locs):
     top, right, bottom, left)
     """
 
-    face = FaceBox(
-        top_x=locs[3],
-        top_y=locs[0],
-        bottom_x=[1],
-        bottom_y=locs[2]
-    )
-    return face
+    faces = []
+    for location in locs:
+        face = FaceBox()
+        face.top_x=location[3]
+        face.top_y=location[0]
+        face.bottom_x=location[1]
+        face.bottom_y=location[2]
+        faces.append(face)
+
+    return faces
 

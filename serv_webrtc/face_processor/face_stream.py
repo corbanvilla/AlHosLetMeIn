@@ -15,7 +15,7 @@ from loguru import logger as log
 from database.database import SessionLocal, engine
 from database import models, crud
 from recognition import cosine_similarity, find_closest_face_match
-from face_box_helper import coordinates_to_face_box
+from face_box_helper import coordinates_to_face_boxs
 
 # Initialize database
 models.Base.metadata.create_all(bind=engine)
@@ -40,7 +40,7 @@ class FaceStreamTrack(VideoStreamTrack):
         self.track = track
         self.last_frame = None
         self.frame_counter = 0
-        self.update_frames = 15
+        self.update_frames = 2
 
         # Start our worker thread        
         self.worker = asyncio.create_task(self._face_analyzer_thread())
@@ -52,12 +52,15 @@ class FaceStreamTrack(VideoStreamTrack):
         frame = await self.track.recv()
 
         # If it's been x frames since our last update
+        global frame_lock
         if self.frame_counter >= self.update_frames \
                 and not frame_lock:
 
             # Assign it to our global variable            
+            frame_lock = True
             global latest_frame
             latest_frame = frame.to_ndarray(format="bgr24")
+            frame_lock = False
 
             # Reset frame counter
             self.frame_counter = 0
@@ -105,9 +108,9 @@ class FaceStreamTrack(VideoStreamTrack):
                 frame_lock = True
                 
                 log.debug('Frame lock: enabled!')
+                return latest_frame
         
-            # Return latest frame (can be None)
-            return latest_frame
+            return None
 
         while True:
             
@@ -116,24 +119,28 @@ class FaceStreamTrack(VideoStreamTrack):
             if img is None:
                 await asyncio.sleep(.1)
                 continue
+            #if not img:
+            #    # We recieved an empty frame. Release and sleep
+            #    reset_processed_frame()
+            #    await asyncio.sleep(.1)
+            #    continue
 
             # Find faces
             #faces = findfaces.get_face_locations(img)
-            #log.info(f'Found {len(faces)} faces!')
             locs = face_recognition.face_locations(img, model="cnn") #[(face.top_y, face.bottom_x, face.bottom_y, face.top_x)]
-            face = coordinates_to_face_box(locs)
+            faces = coordinates_to_face_boxs(locs)
+            log.info(f'Found {len(faces)} faces!')
 
             # TODO - implement find largest face pattern
 
-            #if len(faces) == 0:
-            #    log.info('No faces found in last frame....')
-            #    reset_processed_frame()
-            #    continue
-            #face = faces[0]
+            if len(faces) == 0:
+                log.info('No faces found in last frame....')
+                reset_processed_frame()
+                continue
+            face = faces[0]
 
             # Get face encoding
             # This is just how locations need to be formatted for this function
-            log.info(f'Found {len(locs)} faces w/ dlib...')
             log.debug(f'Attempting to get encodings with coordinates: {locs}')
             encodings = face_recognition.face_encodings(img, locs)
             if len(encodings) == 0:
@@ -159,9 +166,14 @@ class FaceStreamTrack(VideoStreamTrack):
                 color = (100, 100, 100)
 
             # Image manipulation
-            img = self._crop_face_from_image(img, face)
-            img = self._scale_image_to_height(img, desired_height=300)
-            img = self._draw_inner_rectangle(img, rgb=color)
+            try:
+                img = self._crop_face_from_image(img, face)
+                img = self._scale_image_to_height(img, desired_height=300)
+                img = self._draw_inner_rectangle(img, rgb=color)
+            except Exception as e:
+                log.error(f'Issue processing frame: {e}')
+                reset_processed_frame()
+                continue
 
             # Update our global var
             global current_face
