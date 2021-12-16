@@ -232,7 +232,7 @@ class FaceStreamTrack(VideoStreamTrack):
         rectangle_buffer_x = int(height * (buffer_percent/100))
         rectangle_buffer_y = int(width * (buffer_percent/100))
 
-        # Bottom left is at 0+buffer:
+        # Bottom left is at 0+buffer
         rec_x1 = rectangle_buffer_x
         rec_y1 = rectangle_buffer_y
 
